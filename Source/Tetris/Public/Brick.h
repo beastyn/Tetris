@@ -33,7 +33,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	TArray<FVector> GenerateFirstFigure();
 
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
 
@@ -56,20 +55,9 @@ public:
 private:
 
 
-	ABrickConstructor * Brick;
-
 	TArray<UStaticMeshComponent*> CubesForFigure ;
 
-	UPROPERTY(EditAnywhere, Category = "Spawning Brick")
-
-	ACameraActor* MainCamera = nullptr;
-	
 	UGridCounter* Grid = nullptr;
 		
-	UPROPERTY()
-	TArray<FVector> CubesRelativeLocation = { FVector(0,0,0), FVector(0,0,0), FVector(0,0,0), FVector(0,0,0) };
-	
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMesh* MeshForCube;
 	
 };
