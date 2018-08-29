@@ -33,7 +33,9 @@ void ABrick::BeginPlay()
 	CubesForFigure[1]->SetRelativeLocation(FVector(0, -100, 0));
 	CubesForFigure[2]->SetRelativeLocation(FVector(0, -200, 0));
 	CubesForFigure[3]->SetRelativeLocation(FVector(0, -300, 0));
-		
+
+
+			
 }
 
 // Called every frame
@@ -48,6 +50,8 @@ void ABrick::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+//Making Bricks and getters for coords
 
 TArray<UStaticMeshComponent*> ABrick::GetStaticMeshesforCubes()
 {
@@ -75,7 +79,6 @@ TArray<FVector> ABrick::GetCubesCoordinates()
 	}
 	return CubeCoordinate;
 }
-
 
 
 float ABrick::GetMinYCoordinate(TArray<FVector> CubesRelativeLocation)
@@ -113,12 +116,23 @@ float ABrick::GetMinXCoordinate(TArray<FVector> CubesRelativeLocation)
 	return MinValueX;
 }
 
+// Collect information about Grid
+FVector2D ABrick::GetGridMaxXY()
+{
+	return Grid->GetGridMaxXY();
+}
 
 
+FVector2D ABrick::GetGridMinXY()
+{
+	return Grid->GetGridMinXY();
+	
+}
 
-
-
-
+float ABrick::GetUnitLength()
+{
+	return Grid->GetUnitLength();
+}
 
 
 

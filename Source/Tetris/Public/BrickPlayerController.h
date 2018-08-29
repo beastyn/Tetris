@@ -22,10 +22,13 @@ protected:
 private:
 	
 	FTimerHandle TimerHandle;
+	
+	
+	UPROPERTY()
 	ABrick* Brick;
+
 	UClass* BrickSome;
 
-	bool isBottom = false;
 
 
 
@@ -36,4 +39,26 @@ public:
 	UFUNCTION()
 	void InstantMoveDown();
 	
+	UFUNCTION(BlueprintCallable, Category = "Grid Data")
+	float GetUnitLength();
+
+	UFUNCTION(BlueprintCallable, Category = "Grid Data")
+	FVector2D GetGridMaxXY();
+
+	UFUNCTION(BlueprintCallable, Category = "Grid Data")
+	FVector2D GetGridMinXY();
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	TArray<FVector> GetCubesCoordinates();
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	float GetMaxXCoordinate(TArray<FVector> CubesRelativeLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
+
+
 };

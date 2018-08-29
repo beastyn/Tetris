@@ -24,6 +24,7 @@ void ABrickPlayerController::Tick(float DeltaTime) //TODO Do I need this?
 }
 void ABrickPlayerController::BeginPlay()
 {
+	Brick = Cast<ABrick>(GetPawn());
 	
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABrickPlayerController::InstantMoveDown, 1.f, true);//TODO Clear Timer
 	
@@ -32,15 +33,14 @@ void ABrickPlayerController::BeginPlay()
 
 void ABrickPlayerController::InstantMoveDown() //TODO need refactoring
 {
-	Brick = Cast<ABrick>(GetPawn());
 	
 	if (Brick) //TODO use Grid data
 		
 	{
-		//find clamp values for bottom border
-		auto RelativeCubesCoordinates = Brick->GetCubesCoordinates();
-		auto MinYCoordinate = Brick->GetMinYCoordinate(RelativeCubesCoordinates);
+	   	
+		auto MinYCoordinate = GetMinYCoordinate(GetCubesCoordinates());
 		bool AlmostZero = FMath::IsNearlyEqual(MinYCoordinate, -900, 0.01f);
+		//UE_LOG(LogTemp, Warning, TEXT("Min Y coordinate is: %f"), MinYCoordinate)
 		//UE_LOG(LogTemp, Warning, TEXT("Min Y coordinate is: %s"), AlmostZero ? TEXT("true") : TEXT("false"))
 		if (!AlmostZero)
 		{
@@ -60,9 +60,44 @@ void ABrickPlayerController::InstantMoveDown() //TODO need refactoring
 				FRotator::ZeroRotator,
 				SpawnParams
 				);
+			Brick = Cast<ABrick>(GetPawn());
 	
 		}
 			
 	}
 	 
+}
+
+//For Brick Controller in BP
+
+TArray<FVector> ABrickPlayerController::GetCubesCoordinates()
+{
+	return Brick->GetCubesCoordinates();
+}
+float ABrickPlayerController::GetMinYCoordinate(TArray<FVector> CubesRelativeLocation)
+{
+	return Brick->GetMinYCoordinate(CubesRelativeLocation);
+}
+
+float ABrickPlayerController::GetMaxXCoordinate(TArray<FVector> CubesRelativeLocation)
+{
+	return Brick->GetMaxXCoordinate(CubesRelativeLocation);
+}
+float ABrickPlayerController::GetMinXCoordinate(TArray<FVector> CubesRelativeLocation)
+{
+	return Brick->GetMinXCoordinate(CubesRelativeLocation);
+}
+
+float ABrickPlayerController::GetUnitLength()
+{
+	return Brick->GetUnitLength();
+}
+
+FVector2D ABrickPlayerController::GetGridMaxXY()
+{
+	return Brick->GetGridMaxXY();
+}
+FVector2D ABrickPlayerController::GetGridMinXY()
+{
+	return Brick->GetGridMinXY();
 }

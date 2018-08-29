@@ -59,8 +59,21 @@ FVector2D UGridCounter::CellsPositionCalc(int32 i, int32 j)
 	}
 	DrawLines(AllCellsPosition);
 	return AllCellsPosition[i][j];
-	
+}
 
+FVector2D UGridCounter::GetGridMaxXY()
+{
+	return FVector2D(UnitLength / 2 * Cols, UnitLength / 2 * Rows);
+}
+
+FVector2D UGridCounter::GetGridMinXY()
+{
+	return FVector2D(-UnitLength / 2 * Cols + UnitLength, -UnitLength / 2 * Rows + UnitLength);
+}
+
+float UGridCounter::GetUnitLength()
+{
+	return UnitLength;
 }
 
 void UGridCounter::ArrayInitialization(TArray<TArray<FVector2D>> &AllCellsPosition)

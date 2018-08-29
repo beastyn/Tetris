@@ -25,6 +25,12 @@ public:
 	
 	FVector2D CellsPositionCalc(int32 i, int32 j) ;
 
+	FVector2D GetGridMaxXY();
+
+	FVector2D GetGridMinXY();
+
+	float GetUnitLength();
+
 	void ArrayInitialization(TArray<TArray<FVector2D>> &AllCellsPosition);
 
 	void DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition);
