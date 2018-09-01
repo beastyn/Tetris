@@ -20,15 +20,20 @@ UGridCounter::UGridCounter()
 void UGridCounter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	for (int32 i = 0; i < Rows; i++)
 	{
 		for (int32 j = 0; j < Cols; j++)
 		{
 			CellsPositionCalc(i,j);
+			
+			if (GridData.Num() < Rows*Cols)
+			{
+				GridData.Add(FGridData(i, j, CellsPositionCalc(i, j), false));
+			}
+			
 		}
 	}
-
-	// ...
 	
 }
 
@@ -59,6 +64,11 @@ FVector2D UGridCounter::CellsPositionCalc(int32 i, int32 j)
 	}
 	DrawLines(AllCellsPosition);
 	return AllCellsPosition[i][j];
+}
+
+TArray<FGridData> UGridCounter::GetGridData()
+{
+	return GridData;
 }
 
 FVector2D UGridCounter::GetGridMaxXY()

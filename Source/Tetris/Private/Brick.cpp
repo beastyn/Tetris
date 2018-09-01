@@ -14,7 +14,6 @@ ABrick::ABrick()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
-	
 	Grid = CreateDefaultSubobject<UGridCounter>(FName("Grid Counter"));
 
 
@@ -26,7 +25,7 @@ void ABrick::BeginPlay()
 {
 	
 	Super::BeginPlay();
-
+	
 	CubesForFigure = GetStaticMeshesforCubes();
 	//TODO make random figure generation
 	CubesForFigure[0]->SetRelativeLocation(FVector(0));
@@ -116,6 +115,33 @@ float ABrick::GetMinXCoordinate(TArray<FVector> CubesRelativeLocation)
 	return MinValueX;
 }
 
+TArray<int32> ABrick::GetCubeIndex(FVector CubeCoordinate)
+{
+	CubeIndex[0] = (int32)(CubeCoordinate.Y*(-1) / GetUnitLength() + 10);
+	CubeIndex[1] = (int32)(CubeCoordinate.X*(-1) / GetUnitLength() + 5);
+
+	return CubeIndex;
+}
+
+/*TArray<int32> ABrick::GetCubeIndexWithMinY(TArray<FVector> CubesRelativeLocation)
+{
+	float MinValueY = CubesRelativeLocation[0].Y;
+	int32 IndexMinY = 0;
+	for (int32 i = 0; i < CubesRelativeLocation.Num(); i++)
+	{
+
+		if (CubesRelativeLocation[i].Y <= MinValueY) 
+		{ 
+			IndexMinY = i;
+		} 
+	}
+	(int32) CubeIndex[0] = CubesRelativeLocation[IndexMinY].Y*(-1) / GetUnitLength() + 10;
+	(int32) CubeIndex[1] = CubesRelativeLocation[IndexMinY].X*(-1) / GetUnitLength() + 5;
+
+	return TArray<int32>{CubeIndex[0], CubeIndex[1]};
+}*/
+
+
 // Collect information about Grid
 FVector2D ABrick::GetGridMaxXY()
 {
@@ -134,5 +160,9 @@ float ABrick::GetUnitLength()
 	return Grid->GetUnitLength();
 }
 
+TArray<FGridData> ABrick::GetGridData()
+{
+	return Grid->GetGridData();
+}
 
 

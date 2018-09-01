@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GridData.h"
 #include "GridCounter.generated.h"
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TETRIS_API UGridCounter : public UActorComponent
@@ -35,7 +37,16 @@ public:
 
 	void DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition);
 
+	TArray<FGridData> GetGridData();
+
 private:
+
+	UPROPERTY()
+	TArray<FGridData> GridData;
+
+	UPROPERTY()
+	FGridData GridDataTest;
+
 	int32 UnitLength = 100;
 	int32 Rows = 20;
 	int32 Cols = 10;

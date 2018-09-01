@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GridData.h"
 #include "BrickPlayerController.generated.h"
 
 class ABrick;
+struct FGridData;
 /**
  * 
  */
@@ -22,14 +24,20 @@ protected:
 private:
 	
 	FTimerHandle TimerHandle;
-	
-	
+		
 	UPROPERTY()
 	ABrick* Brick;
 
+	UPROPERTY()
 	UClass* BrickSome;
 
+	UPROPERTY()
+	TArray<FGridData> UpdatedGridData;
 
+	UPROPERTY()
+	TArray<int32> CubeIndex = { 0,0 };
+
+	bool IsAbleMoveDown = true;
 
 
 public:
@@ -38,6 +46,14 @@ public:
 	
 	UFUNCTION()
 	void InstantMoveDown();
+
+	void GetOnceGridData();
+
+	void SpawnNewBrick();
+
+	void SetGridFilledCell(TArray<FVector> &CubesCoordinates);
+
+	void CheckForDownSide(TArray<FVector> &CubesCoordinates);
 	
 	UFUNCTION(BlueprintCallable, Category = "Grid Data")
 	float GetUnitLength();
@@ -60,5 +76,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
 	float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
 
+
+	
 
 };

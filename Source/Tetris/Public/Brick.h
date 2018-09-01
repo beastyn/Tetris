@@ -9,7 +9,7 @@
 
 
 class UGridCounter;
-class ABrickConstructor;
+struct FGridData;
 
 UCLASS()
 class TETRIS_API ABrick : public APawn
@@ -39,28 +39,28 @@ public:
 
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
 	
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
 	TArray<FVector> GetCubesCoordinates();
 
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
 	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
 
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
 	float GetMaxXCoordinate(TArray<FVector> CubesRelativeLocation);
-	
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		
 	float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
 
-
+	TArray<int32> GetCubeIndex(FVector CubeCoordinate);
+	//TArray<int32> GetCubeIndexWithMinY(TArray<FVector> CubesRelativeLocation);
+	
+	TArray<FGridData> GetGridData();
 	
 		
-
 private:
 
 
 	TArray<UStaticMeshComponent*> CubesForFigure ;
 
 	UGridCounter* Grid = nullptr;
+
+	TArray<int32> CubeIndex = { 0,0 };
 		
 	
 };
