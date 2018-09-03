@@ -37,6 +37,7 @@ private:
 	UPROPERTY()
 	TArray<int32> CubeIndex = { 0,0 };
 
+	UPROPERTY(EditAnywhere)
 	bool IsAbleMoveDown = true;
 
 
@@ -44,16 +45,28 @@ public:
 	ABrickPlayerController();
 	virtual void Tick(float DeltaTime) override;
 	
+	UFUNCTION(BlueprintCallable, Category = "Brick Data")
+	ABrick* GetBrick();
+
+	UPROPERTY(EditAnywhere)
+	TArray<UStaticMeshComponent*> CubesForFigure1 = { 0 };
+
+	
 	UFUNCTION()
 	void InstantMoveDown();
 
 	void GetOnceGridData();
 
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	TArray<int32>GetCubeIndex(FVector CubeCoordinate);
+
+
 	void SpawnNewBrick();
 
 	void SetGridFilledCell(TArray<FVector> &CubesCoordinates);
 
-	void CheckForDownSide(TArray<FVector> &CubesCoordinates);
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	void CheckForDownSide(TArray<FVector> CubesCoordinates, bool &OUTisAbleMoveDown);
 	
 	UFUNCTION(BlueprintCallable, Category = "Grid Data")
 	float GetUnitLength();

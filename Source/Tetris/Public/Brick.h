@@ -36,8 +36,9 @@ public:
 	FVector2D GetGridMaxXY();
 	FVector2D GetGridMinXY();
 	float GetUnitLength();
-
+	
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
+	TArray<UStaticMeshComponent*> GetCubesForFigure();
 	
 	TArray<FVector> GetCubesCoordinates();
 
@@ -52,11 +53,13 @@ public:
 	
 	TArray<FGridData> GetGridData();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Brick Data")
+	TArray<UStaticMeshComponent*> CubesForFigure;
+	
 		
 private:
 
 
-	TArray<UStaticMeshComponent*> CubesForFigure ;
 
 	UGridCounter* Grid = nullptr;
 

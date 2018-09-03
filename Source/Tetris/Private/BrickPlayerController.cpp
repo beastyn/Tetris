@@ -27,9 +27,15 @@ void ABrickPlayerController::Tick(float DeltaTime) //TODO Do I need this?
 void ABrickPlayerController::BeginPlay()
 {
 	Brick = Cast<ABrick>(GetPawn());
+	if (Brick) { CubesForFigure1 = Brick->GetCubesForFigure(); }
 	UpdatedGridData = Brick->GetGridData();
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABrickPlayerController::InstantMoveDown,1.f, true);//TODO Clear Timer
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABrickPlayerController::InstantMoveDown, 1.f, true);//TODO Clear Timer
 
+}
+
+ABrick* ABrickPlayerController::GetBrick()
+{
+	return Brick;
 }
 
 void ABrickPlayerController::InstantMoveDown() 
@@ -42,7 +48,7 @@ void ABrickPlayerController::InstantMoveDown()
 		auto MinYCoordinate = GetMinYCoordinate(CubesCoordinates);
 		bool AlmostZero = FMath::IsNearlyEqual(MinYCoordinate, -900, 0.01f);
 		
-		CheckForDownSide(CubesCoordinates);
+		CheckForDownSide(CubesCoordinates, IsAbleMoveDown);
 		
 		if (!AlmostZero && IsAbleMoveDown)
 		{		
@@ -52,6 +58,7 @@ void ABrickPlayerController::InstantMoveDown()
 		{
 			SetGridFilledCell(CubesCoordinates);
 			SpawnNewBrick();
+
 		}
 			
 	}
@@ -67,21 +74,26 @@ void ABrickPlayerController::GetOnceGridData()
 	}
 }
 
-void ABrickPlayerController::CheckForDownSide(TArray<FVector> &CubesCoordinates)
+void ABrickPlayerController::CheckForDownSide(TArray<FVector> CubesCoordinates, bool &OUTisAbleMoveDown)
 {
 	for (int32 i = 0; i < CubesCoordinates.Num(); i++)
 	{
-		int32 IndexI = Brick->GetCubeIndex(CubesCoordinates[i])[0];
-		int32 IndexJ = Brick->GetCubeIndex(CubesCoordinates[i])[1];
+		int32 IndexI = GetCubeIndex(CubesCoordinates[i])[0];
+		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
 		if (IndexI < 19)
 		{
 			if (UpdatedGridData[IndexI * 10 + IndexJ + 10].isFilled)
 			{
 				IsAbleMoveDown = false;
-				UE_LOG(LogTemp, Warning, TEXT("Not able move down"))
 			}
 		}
 	}
+	OUTisAbleMoveDown = IsAbleMoveDown;
+}
+
+TArray<int32> ABrickPlayerController::GetCubeIndex(FVector CubeCoordinate)
+{
+	return Brick->GetCubeIndex(CubeCoordinate);
 }
 
 void ABrickPlayerController::SetGridFilledCell(TArray<FVector> &CubesCoordinates)
@@ -107,6 +119,7 @@ void ABrickPlayerController::SpawnNewBrick()
 		);
 	Brick = Cast<ABrick>(GetPawn());
 	IsAbleMoveDown = true;
+	CubesForFigure1 = Brick->GetCubesForFigure();
 }
 
 //For Brick Controller in BP

@@ -28,11 +28,11 @@ void ABrick::BeginPlay()
 	
 	CubesForFigure = GetStaticMeshesforCubes();
 	//TODO make random figure generation
-	CubesForFigure[0]->SetRelativeLocation(FVector(0));
-	CubesForFigure[1]->SetRelativeLocation(FVector(0, -100, 0));
-	CubesForFigure[2]->SetRelativeLocation(FVector(0, -200, 0));
-	CubesForFigure[3]->SetRelativeLocation(FVector(0, -300, 0));
-
+	CubesForFigure[0]->SetRelativeLocation(FVector(0,100, 0));
+	CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
+	CubesForFigure[2]->SetRelativeLocation(FVector(0, -100, 0));
+	CubesForFigure[3]->SetRelativeLocation(FVector(0, -200, 0));
+	
 
 			
 }
@@ -66,6 +66,11 @@ TArray<UStaticMeshComponent*> ABrick::GetStaticMeshesforCubes()
 		}
 	}
 	return MeshComp;
+}
+
+TArray<UStaticMeshComponent*> ABrick::GetCubesForFigure()
+{
+	return CubesForFigure;
 }
 
 TArray<FVector> ABrick::GetCubesCoordinates()
