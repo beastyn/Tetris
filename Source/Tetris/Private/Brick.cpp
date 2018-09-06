@@ -33,7 +33,7 @@ void ABrick::BeginPlay()
 	CubesForFigure[2]->SetRelativeLocation(FVector(0, -100, 0));
 	CubesForFigure[3]->SetRelativeLocation(FVector(0, -200, 0));
 	
-
+	
 			
 }
 
@@ -50,7 +50,7 @@ void ABrick::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-//Making Bricks and getters for coords
+//Making Bricks and getters for coords and meshes
 
 TArray<UStaticMeshComponent*> ABrick::GetStaticMeshesforCubes()
 {
@@ -66,11 +66,6 @@ TArray<UStaticMeshComponent*> ABrick::GetStaticMeshesforCubes()
 		}
 	}
 	return MeshComp;
-}
-
-TArray<UStaticMeshComponent*> ABrick::GetCubesForFigure()
-{
-	return CubesForFigure;
 }
 
 TArray<FVector> ABrick::GetCubesCoordinates()

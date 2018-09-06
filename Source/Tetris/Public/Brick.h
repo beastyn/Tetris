@@ -38,8 +38,7 @@ public:
 	float GetUnitLength();
 	
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
-	TArray<UStaticMeshComponent*> GetCubesForFigure();
-	
+		
 	TArray<FVector> GetCubesCoordinates();
 
 	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
@@ -59,9 +58,7 @@ public:
 		
 private:
 
-
-
-	UGridCounter* Grid = nullptr;
+		UGridCounter* Grid = nullptr;
 
 	TArray<int32> CubeIndex = { 0,0 };
 		

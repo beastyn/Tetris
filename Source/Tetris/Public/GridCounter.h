@@ -44,8 +44,7 @@ private:
 	UPROPERTY()
 	TArray<FGridData> GridData;
 
-	UPROPERTY()
-	FGridData GridDataTest;
+	UStaticMeshComponent* EmptyCellMesh;
 
 	int32 UnitLength = 100;
 	int32 Rows = 20;

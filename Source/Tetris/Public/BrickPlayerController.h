@@ -31,63 +31,93 @@ private:
 	UPROPERTY()
 	UClass* BrickSome;
 
-	UPROPERTY()
-	TArray<FGridData> UpdatedGridData;
 
 	UPROPERTY()
 	TArray<int32> CubeIndex = { 0,0 };
 
-	UPROPERTY(EditAnywhere)
-	bool IsAbleMoveDown = true;
+	UPROPERTY()
+	TArray<FGridData> UpdatedGridData;
+	
+	UStaticMeshComponent* EmptyCellMesh;
+
+	bool isSolved = false;
 
 
 public:
 	ABrickPlayerController();
 	virtual void Tick(float DeltaTime) override;
+
+	// info about grid
+
+	void GetOnceGridData();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid Data")
+	float UnitLength;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid Data")
+	FVector2D GridMaxXY;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid Data")
+	FVector2D GridMinXY;
+	
+	// info about brick
 	
 	UFUNCTION(BlueprintCallable, Category = "Brick Data")
 	ABrick* GetBrick();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "Brick Data")
+	TArray<UStaticMeshComponent*> CubesMeshesForBrick;
+	
+	//Info for movement
 
-	UPROPERTY(EditAnywhere)
-	TArray<UStaticMeshComponent*> CubesForFigure1 = { 0 };
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		TArray<FVector> GetCubesCoordinates();
 
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		TArray<int32>GetCubeIndex(FVector CubeCoordinate);
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		float GetMaxXCoordinate(TArray<FVector> CubesRelativeLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+		float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		bool IsAbleMoveDown = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		bool IsAbleMoveLeft = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		bool IsAbleMoveRight = true;
+
+	// moving brick
 	
 	UFUNCTION()
 	void InstantMoveDown();
 
-	void GetOnceGridData();
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	void CheckForDownSide(TArray<FVector> CubesCoordinates);
+	
+	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
+	void CheckForLeftSide(TArray<FVector> CubesCoordinates);
 
 	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	TArray<int32>GetCubeIndex(FVector CubeCoordinate);
-
+	void CheckForRightSide(TArray<FVector> CubesCoordinates);
 
 	void SpawnNewBrick();
 
-	void SetGridFilledCell(TArray<FVector> &CubesCoordinates);
+	//Grid update
+	void SetEmptyStaticMeshesinGrid();
+	void SetGridFilledCell(TArray<FVector> CubesCoordinates, TArray<UStaticMeshComponent*> CubesMeshesForBrick);
 
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	void CheckForDownSide(TArray<FVector> CubesCoordinates, bool &OUTisAbleMoveDown);
+
+
 	
-	UFUNCTION(BlueprintCallable, Category = "Grid Data")
-	float GetUnitLength();
-
-	UFUNCTION(BlueprintCallable, Category = "Grid Data")
-	FVector2D GetGridMaxXY();
-
-	UFUNCTION(BlueprintCallable, Category = "Grid Data")
-	FVector2D GetGridMinXY();
-
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	TArray<FVector> GetCubesCoordinates();
-
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
-
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	float GetMaxXCoordinate(TArray<FVector> CubesRelativeLocation);
-
-	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
-	float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
+	
 
 
 	
