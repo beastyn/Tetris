@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Brick.h"
-#include "GridCounter.h"
 #include "Components/StaticMeshComponent.h"
 #include "ConstructorHelpers.h"
 #include "Classes/Engine/World.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
+#include "BrickPlayerController.h"
 
 
 // Sets default values
@@ -14,7 +15,7 @@ ABrick::ABrick()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
-	Grid = CreateDefaultSubobject<UGridCounter>(FName("Grid Counter"));
+	
 
 
 	
@@ -33,6 +34,9 @@ void ABrick::BeginPlay()
 	CubesForFigure[2]->SetRelativeLocation(FVector(0, -100, 0));
 	CubesForFigure[3]->SetRelativeLocation(FVector(0, -200, 0));
 	
+	auto BrickPlayerController = Cast<ABrickPlayerController>(GetWorld()->GetFirstPlayerController());
+	BrickPlayerController->OnBrickStop.AddDynamic(this, &ABrick::DeleteEmptyBrick);
+	//BrickPlayerController->OnBrickStop.ExecuteIfBound();
 	
 			
 }
@@ -117,52 +121,19 @@ float ABrick::GetMinXCoordinate(TArray<FVector> CubesRelativeLocation)
 
 TArray<int32> ABrick::GetCubeIndex(FVector CubeCoordinate)
 {
-	CubeIndex[0] = (int32)(CubeCoordinate.Y*(-1) / GetUnitLength() + 10);
-	CubeIndex[1] = (int32)(CubeCoordinate.X*(-1) / GetUnitLength() + 5);
+	CubeIndex[0] = (int32)(CubeCoordinate.Y*(-1) / 100 + 10);
+	CubeIndex[1] = (int32)(CubeCoordinate.X*(-1) / 100 + 5);
 
 	return CubeIndex;
 }
 
-/*TArray<int32> ABrick::GetCubeIndexWithMinY(TArray<FVector> CubesRelativeLocation)
+void ABrick::DeleteEmptyBrick()
 {
-	float MinValueY = CubesRelativeLocation[0].Y;
-	int32 IndexMinY = 0;
-	for (int32 i = 0; i < CubesRelativeLocation.Num(); i++)
+	if (GetStaticMeshesforCubes().Num() == 0)
 	{
-
-		if (CubesRelativeLocation[i].Y <= MinValueY) 
-		{ 
-			IndexMinY = i;
-		} 
+		this->Destroy();
 	}
-	(int32) CubeIndex[0] = CubesRelativeLocation[IndexMinY].Y*(-1) / GetUnitLength() + 10;
-	(int32) CubeIndex[1] = CubesRelativeLocation[IndexMinY].X*(-1) / GetUnitLength() + 5;
-
-	return TArray<int32>{CubeIndex[0], CubeIndex[1]};
-}*/
-
-
-// Collect information about Grid
-FVector2D ABrick::GetGridMaxXY()
-{
-	return Grid->GetGridMaxXY();
-}
-
-
-FVector2D ABrick::GetGridMinXY()
-{
-	return Grid->GetGridMinXY();
 	
-}
-
-float ABrick::GetUnitLength()
-{
-	return Grid->GetUnitLength();
-}
-
-TArray<FGridData> ABrick::GetGridData()
-{
-	return Grid->GetGridData();
 }
 
 

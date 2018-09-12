@@ -9,6 +9,7 @@
 
 
 class UGridCounter;
+class UTestGrid;
 struct FGridData;
 
 UCLASS()
@@ -24,7 +25,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	
 
+private:
+
+	
+	UPROPERTY()
+	TArray<UStaticMeshComponent*> CubesForFigure;
+
+	UPROPERTY()
+	TArray<int32> CubeIndex = { 0,0 };
 
 public:	
 	// Called every frame
@@ -33,12 +43,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	FVector2D GetGridMaxXY();
-	FVector2D GetGridMinXY();
-	float GetUnitLength();
-	
+	//Brick Data
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
-		
+	
 	TArray<FVector> GetCubesCoordinates();
 
 	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);
@@ -48,19 +55,15 @@ public:
 	float GetMinXCoordinate(TArray<FVector> CubesRelativeLocation);
 
 	TArray<int32> GetCubeIndex(FVector CubeCoordinate);
-	//TArray<int32> GetCubeIndexWithMinY(TArray<FVector> CubesRelativeLocation);
+
+	UFUNCTION()
+	void DeleteEmptyBrick();
+		
+
 	
-	TArray<FGridData> GetGridData();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Brick Data")
-	TArray<UStaticMeshComponent*> CubesForFigure;
+
 	
 		
-private:
 
-		UGridCounter* Grid = nullptr;
-
-	TArray<int32> CubeIndex = { 0,0 };
-		
 	
 };

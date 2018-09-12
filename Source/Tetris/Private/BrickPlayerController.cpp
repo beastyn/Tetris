@@ -9,16 +9,20 @@
 #include "Camera/PlayerCameraManager.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/StaticMeshComponent.h"
+#include "GridCounter.h"
+#include "TetrisResolve.h"
+
 
 
 ABrickPlayerController::ABrickPlayerController()
 {
 
-	static ConstructorHelpers::FObjectFinder<UClass> BrickFinder(TEXT("Class'/Game/Props/Brick_BP.Brick_BP_C'"));
+	static ConstructorHelpers::FObjectFinder<UClass> BrickFinder(TEXT("Class '/Game/Tetris/Brick/Brick_BP.Brick_BP_C'"));
 	BrickSome = BrickFinder.Object;
 	EmptyCellMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("DefaultEmptyMesh"));
 	bAutoManageActiveCameraTarget = false;
-	
+	Grid = CreateDefaultSubobject<UGridCounter>(FName("Grid Counter"));
+	TetrisResolve = CreateDefaultSubobject<UTetrisResolve>(FName("Tetris Resolving"));
 }
 
 void ABrickPlayerController::Tick(float DeltaTime) //TODO Do I need this?
@@ -27,31 +31,37 @@ void ABrickPlayerController::Tick(float DeltaTime) //TODO Do I need this?
 }
 void ABrickPlayerController::BeginPlay()
 {
+	Super::BeginPlay();
+
+	//Set Default Data
 	Brick = Cast<ABrick>(GetPawn());
 	CubesMeshesForBrick = Brick->GetStaticMeshesforCubes();
+	GridData = Grid->GetGridData();
+	SetEmptyStaticMeshesinGrid();
 	//Grid Data for movement
-	UnitLength = Brick->GetUnitLength();
-	GridMaxXY = Brick->GetGridMaxXY();
-	GridMinXY = Brick->GetGridMinXY();
-	UpdatedGridData = Brick->GetGridData();
-
+	UnitLength = Grid->GetUnitLength();
+	GridMaxXY = Grid->GetGridMaxXY();
+	GridMinXY = Grid->GetGridMinXY();
+	
 	//istant move down
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABrickPlayerController::InstantMoveDown, 1.f, true);//TODO Clear Timer
+	
 
 }
 
-ABrick* ABrickPlayerController::GetBrick()
+void ABrickPlayerController::TestTimer()
 {
-	return Brick;
+	UE_LOG(LogTemp, Warning, TEXT("Is timer tick"))
 }
-
 
 void ABrickPlayerController::InstantMoveDown() 
 {	
 	if (Brick)
 	{
-		GetOnceGridData(); 
-
+		/*for (int32 i = 0; i < GridData.Num(); i++)
+		{
+		UE_LOG(LogTemp, Warning, TEXT("%d: %s"), i, GridData[i].isFilled ? "1" : "0")
+		}*/
 		auto CubesCoordinates = GetCubesCoordinates();
 		auto MinYCoordinate = GetMinYCoordinate(CubesCoordinates);
 		bool AlmostZero = FMath::IsNearlyEqual(MinYCoordinate, -900, 0.01f);
@@ -66,58 +76,14 @@ void ABrickPlayerController::InstantMoveDown()
 		{
 			SetGridFilledCell(CubesCoordinates, CubesMeshesForBrick);
 			
-			int32 CountFilledLine = 0;
-			int32 MaxJ = 0;
-			for (int32 j = 0; j < 20; j++)
-			{
-				for (int32 i = 0; i < 10; i++)
-				{
-					if (UpdatedGridData[j * 10 + i].isFilled)
-					{
-						CountFilledLine++;
-					}
-				}
-				if (CountFilledLine == 10)
-				{
-					MaxJ = j;
-					isSolved = true;
-					for (int32 i = 0; i < 10; i++)
-					{
-						UpdatedGridData[j * 10 + i].CubeFromBrick->DestroyComponent();
-						UpdatedGridData[j * 10 + i].CubeFromBrick= EmptyCellMesh;
-						UpdatedGridData[j * 10 + i].isFilled = false;
+			TetrisResolve->CheckSolving(GridData, EmptyCellMesh);
 						
-					}
-				}	
-				CountFilledLine = 0;
-								
-			}
-		
-			if (isSolved)
-			{
-				for (int32 x = MaxJ - 1; x >= 0; x--)
-				{
-					for (int32 y = 0; y < 10; y++)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("%d: %s"), x * 10 + 10 + y, UpdatedGridData[x * 10 + 10 + y].isFilled ? "1" : "0")
-						if (UpdatedGridData[x * 10 + y].isFilled)
-						{
-							UpdatedGridData[x * 10 + y].CubeFromBrick->AddRelativeLocation(FVector(0, -100, 0));
-							UpdatedGridData[x * 10 + y + 10].CubeFromBrick = UpdatedGridData[x * 10 + y].CubeFromBrick;
-							UpdatedGridData[x * 10 + y].CubeFromBrick = EmptyCellMesh;
-							UpdatedGridData[x * 10 + y].isFilled = false;
-							UpdatedGridData[x * 10 + 10 + y].isFilled = true;
+			TetrisResolve->CorrectBrickPositions(GridData, EmptyCellMesh);
+			
+			OnBrickStop.Broadcast();
 
-							UE_LOG(LogTemp, Warning, TEXT("%d: %s"), x * 10 + 10 + y, UpdatedGridData[x * 10 + 10 + y].isFilled ? "1" : "0")
+			//Brick->DeleteEmptyBrick(Brick->GetStaticMeshesforCubes());
 
-						}
-					}
-				}
-
-				MaxJ = 0;
-				
-			}
-		
 			SpawnNewBrick();
 		}
 			
@@ -125,14 +91,11 @@ void ABrickPlayerController::InstantMoveDown()
 	 
 }
 
-void ABrickPlayerController::GetOnceGridData()
+void ABrickPlayerController::SetEmptyStaticMeshesinGrid()
 {
-	if (UpdatedGridData.Num() == 0)
+	for (int32 i = 0; i < GridData.Num(); i++)
 	{
-		UpdatedGridData = Brick->GetGridData();
-		SetEmptyStaticMeshesinGrid();
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *(UpdatedGridData[1].CubeFromBrick->GetName()))
-
+		GridData[i].CubeFromBrick = EmptyCellMesh;
 	}
 }
 
@@ -144,7 +107,7 @@ void ABrickPlayerController::CheckForDownSide(TArray<FVector> CubesCoordinates)
 		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
 		if (IndexI < 19)
 		{
-			if (UpdatedGridData[IndexI * 10 + IndexJ + 10].isFilled)
+			if (GridData[IndexI * 10 + IndexJ + 10].isFilled)
 			{
 				IsAbleMoveDown = false;
 			}
@@ -161,7 +124,7 @@ void ABrickPlayerController::CheckForLeftSide(TArray<FVector> CubesCoordinates)
 		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
 		if (IndexI < 19)
 		{
-			if (UpdatedGridData[IndexI * 10 + IndexJ - 1].isFilled)
+			if (GridData[IndexI * 10 + IndexJ - 1].isFilled)
 			{
 				IsAbleMoveLeft = false;
 			}
@@ -177,7 +140,7 @@ void ABrickPlayerController::CheckForRightSide(TArray<FVector> CubesCoordinates)
 		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
 		if (IndexI < 19)
 		{
-			if (UpdatedGridData[IndexI * 10 + IndexJ + 1].isFilled)
+			if (GridData[IndexI * 10 + IndexJ + 1].isFilled)
 			{
 				IsAbleMoveRight = false;
 			}
@@ -191,22 +154,14 @@ TArray<int32> ABrickPlayerController::GetCubeIndex(FVector CubeCoordinate)
 	return Brick->GetCubeIndex(CubeCoordinate);
 }
 
-void ABrickPlayerController::SetEmptyStaticMeshesinGrid()
-{
-	for (int32 i = 0; i < UpdatedGridData.Num(); i++)
-	{
-		UpdatedGridData[i].CubeFromBrick = EmptyCellMesh;
-	}
-}
-
 void ABrickPlayerController::SetGridFilledCell(TArray<FVector> CubesCoordinates, TArray<UStaticMeshComponent*> CubesMeshesForBrick)
 {
 	for (int32 i = 0; i < CubesCoordinates.Num(); i++)
 	{
 		int32 IndexI = Brick->GetCubeIndex(CubesCoordinates[i])[0];
 		int32 IndexJ = Brick->GetCubeIndex(CubesCoordinates[i])[1];
-		UpdatedGridData[IndexI * 10 + IndexJ].isFilled = true;
-		UpdatedGridData[IndexI * 10 + IndexJ].CubeFromBrick = CubesMeshesForBrick[i];
+		GridData[IndexI * 10 + IndexJ].isFilled = true;
+		GridData[IndexI * 10 + IndexJ].CubeFromBrick = CubesMeshesForBrick[i];
 	}
 }
 
