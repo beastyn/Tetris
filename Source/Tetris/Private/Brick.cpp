@@ -28,15 +28,14 @@ void ABrick::BeginPlay()
 	Super::BeginPlay();
 	
 	CubesForFigure = GetStaticMeshesforCubes();
-	//TODO make random figure generation
-	CubesForFigure[0]->SetRelativeLocation(FVector(0,100, 0));
-	CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
-	CubesForFigure[2]->SetRelativeLocation(FVector(0, -100, 0));
-	CubesForFigure[3]->SetRelativeLocation(FVector(0, -200, 0));
 	
+	BrickType = FMath::RandRange(1, 4);
+	SetCubesForBrick(CubesForFigure, BrickType);
+		
 	auto BrickPlayerController = Cast<ABrickPlayerController>(GetWorld()->GetFirstPlayerController());
+	
 	BrickPlayerController->OnBrickStop.AddDynamic(this, &ABrick::DeleteEmptyBrick);
-	//BrickPlayerController->OnBrickStop.ExecuteIfBound();
+	
 	
 			
 }
@@ -70,6 +69,43 @@ TArray<UStaticMeshComponent*> ABrick::GetStaticMeshesforCubes()
 		}
 	}
 	return MeshComp;
+}
+
+void ABrick::SetCubesForBrick(TArray<UStaticMeshComponent*>CubesForFigure, int32 BrickType)
+{
+	if (BrickType == 1)
+	{
+		CubesForFigure[0]->SetRelativeLocation(FVector(0, 100, 0));
+		CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
+		CubesForFigure[2]->SetRelativeLocation(FVector(0, -100, 0));
+		CubesForFigure[3]->SetRelativeLocation(FVector(0, -200, 0));
+	}
+	if (BrickType == 2)
+	{
+		CubesForFigure[0]->SetRelativeLocation(FVector(100, 0, 0));
+		CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
+		CubesForFigure[2]->SetRelativeLocation(FVector(100, 100, 0));
+		CubesForFigure[3]->SetRelativeLocation(FVector(0, 100, 0));
+	}
+	if (BrickType == 3)
+	{
+		CubesForFigure[0]->SetRelativeLocation(FVector(0, 100, 0));
+		CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
+		CubesForFigure[2]->SetRelativeLocation(FVector(100, 100, 0));
+		CubesForFigure[3]->SetRelativeLocation(FVector(0, -100, 0));
+	}
+	if (BrickType == 4)
+	{
+		CubesForFigure[0]->SetRelativeLocation(FVector(0, 100, 0));
+		CubesForFigure[1]->SetRelativeLocation(FVector(0, 0, 0));
+		CubesForFigure[2]->SetRelativeLocation(FVector(100, 100, 0));
+		CubesForFigure[3]->SetRelativeLocation(FVector(-100, 0 , 0));
+	}
+}
+int32 ABrick::GetBrickType()
+{
+	return BrickType;
+	
 }
 
 TArray<FVector> ABrick::GetCubesCoordinates()

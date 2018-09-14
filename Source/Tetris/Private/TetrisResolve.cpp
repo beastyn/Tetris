@@ -46,45 +46,33 @@ void UTetrisResolve::CheckSolving(TArray<FGridData> &GridData, UStaticMeshCompon
 		}
 		if (FilledCellNum == 10)
 		{
-			MaxSolvedRow = j;
-			bSolved = true;
-			SolvedRowsNum++;
-			for (int32 x = 0; x < 10; x++)
-			{
-				GridData[j * 10 + x].CubeFromBrick->DestroyComponent();
-				GridData[j * 10 + x].CubeFromBrick = EmptyCellMesh;
-				GridData[j * 10 + x].isFilled = false;
-			}
-			
+			CorrectBrickPositions(GridData, EmptyCellMesh, j);
 		}
 		FilledCellNum = 0;
 	}
 	
 
 }
-void UTetrisResolve::CorrectBrickPositions(TArray<FGridData> &GridData, UStaticMeshComponent* EmptyCellMesh)
-{
-	if (bSolved)
+void UTetrisResolve::CorrectBrickPositions(TArray<FGridData> &GridData, UStaticMeshComponent* EmptyCellMesh, int32 j)
+{	
+	for (int32 k = 0; k < 10; k++)
 	{
-		for (int32 x = MaxSolvedRow - 1; x >= 0; x--)
+		GridData[j * 10 + k].CubeFromBrick->DestroyComponent();
+		GridData[j * 10 + k].CubeFromBrick = EmptyCellMesh;
+		GridData[j * 10 + k].isFilled = false;
+	}
+	for (int32 x = j - 1; x > 0; x--)
+	{
+		for (int32 y = 0; y < 10; y++)
 		{
-			for (int32 y = 0; y < 10; y++)
+			if (GridData[x * 10 + y].isFilled)
 			{
-				
-					if (GridData[x * 10 + y].isFilled)
-					{
-						GridData[x * 10 + y].CubeFromBrick->AddRelativeLocation(FVector(0, SolvedRowsNum*(-100), 0));
-						GridData[x * 10 + y + SolvedRowsNum*10].CubeFromBrick = GridData[x * 10 + y].CubeFromBrick;
-						GridData[x * 10 + y].CubeFromBrick = EmptyCellMesh;
-						GridData[x * 10 + y].isFilled = false;
-						GridData[x * 10 + SolvedRowsNum*10 + y].isFilled = true;
-					}
+				GridData[x * 10 + y].CubeFromBrick->AddRelativeLocation(FVector(0, -100, 0));
+				GridData[x * 10 + y + 10].CubeFromBrick = GridData[x * 10 + y].CubeFromBrick;
+				GridData[x * 10 + y].CubeFromBrick = EmptyCellMesh;
+				GridData[x * 10 + y].isFilled = false;
+				GridData[x * 10 + 10 + y].isFilled = true;
 			}
 		}
-
-		MaxSolvedRow = 0;
-		SolvedRowsNum = 0;
-
 	}
-	
 }

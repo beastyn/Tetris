@@ -105,7 +105,7 @@ void UGridCounter::DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition)
 			GetWorld(),
 			FVector(AllCellsPosition[i][0] + UnitLength / 2, 141),
 			FVector(AllCellsPosition[i][Cols - 1].X - UnitLength / 2, AllCellsPosition[i][Cols - 1].Y + UnitLength / 2, 141),
-			FColor(255, 0, 0),
+			FColor(236, 211, 189),
 			false, 1000, 0,
 			5.333
 		);
@@ -116,7 +116,7 @@ void UGridCounter::DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition)
 			GetWorld(),
 			FVector(AllCellsPosition[0][j] + UnitLength / 2, 141),
 			FVector(AllCellsPosition[Rows - 1][j].X + UnitLength / 2, AllCellsPosition[Rows - 1][j].Y - UnitLength / 2, 141),
-			FColor(255, 0, 0),
+			FColor(236, 211, 189),
 			false, 1000, 0,
 			5.333
 		);
@@ -127,7 +127,7 @@ void UGridCounter::DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition)
 		GetWorld(),
 		FVector(AllCellsPosition[Rows - 1][0].X + UnitLength / 2, AllCellsPosition[Rows-1][0].Y - UnitLength / 2, 141),
 		FVector(AllCellsPosition[Rows - 1][Cols - 1].X - UnitLength / 2, AllCellsPosition[Rows - 1][Cols - 1].Y - UnitLength / 2, 141),
-		FColor(255, 0, 0),
+		FColor(236, 211, 189),
 		false, 1000, 0,
 		5.333
 	);
@@ -136,7 +136,7 @@ void UGridCounter::DrawLines(TArray<TArray<FVector2D>> &AllCellsPosition)
 		GetWorld(),
 		FVector(AllCellsPosition[0][Cols - 1].X - UnitLength / 2, AllCellsPosition[0][Cols - 1].Y + UnitLength / 2, 141),
 		FVector(AllCellsPosition[Rows - 1][Cols - 1].X - UnitLength / 2, AllCellsPosition[Rows - 1][Cols - 1].Y - UnitLength / 2, 141),
-		FColor(255, 0, 0),
+		FColor(236, 211, 189),
 		false, 1000, 0,
 		5.333
 	);

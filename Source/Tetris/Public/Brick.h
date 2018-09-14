@@ -31,10 +31,16 @@ private:
 
 	
 	UPROPERTY()
+	int32 BrickType;
+	
+	UPROPERTY()
 	TArray<UStaticMeshComponent*> CubesForFigure;
-
+	
 	UPROPERTY()
 	TArray<int32> CubeIndex = { 0,0 };
+
+	void SetCubesForBrick(TArray<UStaticMeshComponent*>CubesForFigure, int32 BrickType);
+
 
 public:	
 	// Called every frame
@@ -43,9 +49,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	
 	//Brick Data
 	TArray<UStaticMeshComponent*> GetStaticMeshesforCubes();
 	
+	int32 GetBrickType();
+
 	TArray<FVector> GetCubesCoordinates();
 
 	float GetMinYCoordinate(TArray<FVector> CubesRelativeLocation);

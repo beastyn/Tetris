@@ -26,7 +26,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void CheckSolving(TArray<FGridData> &GridData, UStaticMeshComponent* EmptyCellMesh);
-	void CorrectBrickPositions(TArray<FGridData> &GridData, UStaticMeshComponent* EmptyCellMesh);
+	void CorrectBrickPositions(TArray<FGridData> &GridData, UStaticMeshComponent* EmptyCellMesh, int32 j);
 
 private:
 

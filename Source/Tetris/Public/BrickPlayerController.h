@@ -94,6 +94,10 @@ public:
 	void GetOnceGridData();
 
 	//Info from Brick for movement in BP
+	
+	UFUNCTION(BlueprintCallable, Category = "Brick Data")
+	int32 GetBrickType();
+
 	UFUNCTION(BlueprintCallable, Category = "Cube Positions")
 		TArray<FVector> GetCubesCoordinates();
 

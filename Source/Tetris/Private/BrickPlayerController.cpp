@@ -78,7 +78,7 @@ void ABrickPlayerController::InstantMoveDown()
 			
 			TetrisResolve->CheckSolving(GridData, EmptyCellMesh);
 						
-			TetrisResolve->CorrectBrickPositions(GridData, EmptyCellMesh);
+		//	TetrisResolve->CorrectBrickPositions(GridData, EmptyCellMesh);
 			
 			OnBrickStop.Broadcast();
 
@@ -97,6 +97,11 @@ void ABrickPlayerController::SetEmptyStaticMeshesinGrid()
 	{
 		GridData[i].CubeFromBrick = EmptyCellMesh;
 	}
+}
+
+int32 ABrickPlayerController::GetBrickType()
+{
+	return Brick->GetBrickType();
 }
 
 void ABrickPlayerController::CheckForDownSide(TArray<FVector> CubesCoordinates)
@@ -122,7 +127,7 @@ void ABrickPlayerController::CheckForLeftSide(TArray<FVector> CubesCoordinates)
 	{
 		int32 IndexI = GetCubeIndex(CubesCoordinates[i])[0];
 		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
-		if (IndexI < 19)
+		if (IndexI <= 19)
 		{
 			if (GridData[IndexI * 10 + IndexJ - 1].isFilled)
 			{
@@ -138,7 +143,7 @@ void ABrickPlayerController::CheckForRightSide(TArray<FVector> CubesCoordinates)
 	{
 		int32 IndexI = GetCubeIndex(CubesCoordinates[i])[0];
 		int32 IndexJ = GetCubeIndex(CubesCoordinates[i])[1];
-		if (IndexI < 19)
+		if (IndexI <= 19)
 		{
 			if (GridData[IndexI * 10 + IndexJ + 1].isFilled)
 			{
